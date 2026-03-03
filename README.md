@@ -11,6 +11,7 @@ A dummy Instagram profile app — identical UI on mobile and web. Built as a fil
 | [NativeWind](https://www.nativewind.dev) v4 | Tailwind CSS utility classes for React Native |
 | [Tailwind CSS](https://tailwindcss.com) v3 | Utility-first CSS (shared via `packages/theme`) |
 | [Turborepo](https://turbo.build) | Monorepo build orchestration |
+| [TypeScript](https://www.typescriptlang.org) 5 | Strict types everywhere — source, config, and declaration files |
 | AsyncStorage | Local photo persistence (no server required) |
 | expo-image-picker | Pick photos from the device library |
 
@@ -49,6 +50,11 @@ cd apps/mobile && npx expo start --android
 cd apps/mobile && npx expo start --ios
 ```
 
+### Type-check all packages
+```sh
+npm run typecheck
+```
+
 ### Build web for production
 ```sh
 npm run build:web
@@ -56,7 +62,7 @@ npm run build:web
 
 ## Shared theme
 
-Edit `packages/theme/tailwind.config.js` to change brand colours, spacing or typography across the whole app:
+Edit `packages/theme/tailwind.config.ts` to change brand colours, spacing or typography across the whole app:
 
 ```js
 colors: {

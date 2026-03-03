@@ -9,6 +9,7 @@ import {
   Platform,
   SafeAreaView,
   FlatList,
+  type ListRenderItem,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +23,12 @@ const INITIAL_POST_COUNT = 12;
 const windowWidth = Dimensions.get('window').width;
 const cellSize = Math.floor(windowWidth / NUM_COLUMNS);
 
-const StoryBubble = ({ label, isAdd }) => (
+interface StoryBubbleProps {
+  label: string;
+  isAdd?: boolean;
+}
+
+const StoryBubble = ({ label, isAdd }: StoryBubbleProps): React.ReactElement => (
   <View className="items-center w-[70px]">
     <View
       className={`w-16 h-16 rounded-full p-0.5 border-2 mb-1 ${
@@ -43,7 +49,13 @@ const StoryBubble = ({ label, isAdd }) => (
   </View>
 );
 
-const PostCell = ({ uri, onPress, size }) => (
+interface PostCellProps {
+  uri: string | null;
+  onPress: () => void;
+  size: number;
+}
+
+const PostCell = ({ uri, onPress, size }: PostCellProps): React.ReactElement => (
   <TouchableOpacity
     style={{ width: size, height: size, padding: 1 }}
     onPress={onPress}
@@ -59,25 +71,31 @@ const PostCell = ({ uri, onPress, size }) => (
   </TouchableOpacity>
 );
 
-export default function App() {
-  const [posts, setPosts] = useState(() => Array(INITIAL_POST_COUNT).fill(null));
+export default function App(): React.ReactElement {
+  const [posts, setPosts] = useState<(string | null)[]>(() =>
+    new Array<string | null>(INITIAL_POST_COUNT).fill(null),
+  );
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY).then((value) => {
-      if (value) {
-        const saved = JSON.parse(value);
-        setPosts((prev) => {
-          const merged = [...prev];
-          saved.forEach((uri, i) => {
-            if (i < merged.length) merged[i] = uri;
+    AsyncStorage.getItem(STORAGE_KEY)
+      .then((value) => {
+        if (value) {
+          const saved: (string | null)[] = JSON.parse(value);
+          setPosts((prev) => {
+            const merged = [...prev];
+            saved.forEach((uri, i) => {
+              if (i < merged.length) merged[i] = uri;
+            });
+            return merged;
           });
-          return merged;
-        });
-      }
-    });
+        }
+      })
+      .catch(() => {
+        // Storage read failure is non-fatal; start with empty grid
+      });
   }, []);
 
-  const pickImage = useCallback(async (index) => {
+  const pickImage = useCallback(async (index: number): Promise<void> => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return;
 
@@ -93,13 +111,15 @@ export default function App() {
       setPosts((prev) => {
         const updated = [...prev];
         updated[index] = uri;
-        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated)).catch(() => {
+          // Storage write failure is non-fatal
+        });
         return updated;
       });
     }
   }, []);
 
-  const renderPost = ({ item, index }) => (
+  const renderPost: ListRenderItem<string | null> = ({ item, index }) => (
     <PostCell uri={item} onPress={() => pickImage(index)} size={cellSize} />
   );
 

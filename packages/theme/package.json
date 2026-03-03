@@ -2,9 +2,13 @@
   "name": "@insta-dummy/theme",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
+  "main": "index.ts",
+  "types": "index.ts",
   "exports": {
-    ".": "./index.js",
-    "./tailwind.config": "./tailwind.config.js"
+    ".": "./index.ts",
+    "./tailwind.config": "./tailwind.config.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   }
 }

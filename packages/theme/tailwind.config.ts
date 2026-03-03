@@ -1,5 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss';
+
+// Tailwind CSS theme preset – shared across all apps in the monorepo.
+const config: Omit<Config, 'content'> = {
   theme: {
     extend: {
       colors: {
@@ -19,3 +21,5 @@ module.exports = {
     },
   },
 };
+
+export default config;
