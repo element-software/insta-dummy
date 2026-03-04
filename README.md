@@ -2,6 +2,8 @@
 
 A dummy Instagram profile app — identical UI on mobile and web. Built as a film/video prop.
 
+🌐 **Live demo:** https://element-software.github.io/insta-dummy/
+
 ## Stack
 
 | Tool | Purpose |
@@ -60,6 +62,19 @@ npm run typecheck
 npm run build:web
 ```
 
+## Deploy to GitHub Pages
+
+The repository includes a [GitHub Actions workflow](.github/workflows/deploy.yml) that builds and deploys the web bundle to GitHub Pages automatically on every push to `main`.
+
+**One-time setup** (only needed the first time):
+
+1. Go to **Settings → Pages** in this repository.
+2. Under *Source*, choose **GitHub Actions**.
+3. Push to `main` (or click *Actions → Deploy to GitHub Pages → Run workflow*).
+
+Once deployed, the app is live at:
+**https://element-software.github.io/insta-dummy/**
+
 ## Shared theme
 
 Edit `packages/theme/tailwind.config.ts` to change brand colours, spacing or typography across the whole app:
@@ -71,7 +86,7 @@ colors: {
 }
 ```
 
-Raw JS tokens are also exported from `packages/theme/index.js` for use outside Tailwind.
+Raw JS tokens are also exported from `packages/theme/index.ts` for use outside Tailwind.
 
 ## Screenshot
 
